@@ -1,15 +1,13 @@
 'use strict';
 
 import { ApolloServer } from 'apollo-server-express';
-import { makeExecutableSchema } from 'graphql-tools';
-
 import { mergeTypes, mergeResolvers } from 'merge-graphql-schemas';
 
-import authType from './auth/types';
-import authResolvers from './auth/resolvers';
+import usersType from './users/types';
+import usersResolvers from './users/resolvers';
 
-const typeDefs = mergeTypes([authType]);
-const resolvers = mergeResolvers([authResolvers]);
+const typeDefs = mergeTypes([usersType]);
+const resolvers = mergeResolvers([usersResolvers]);
 
 // GraphQL: Schema
 const SERVER = new ApolloServer({
@@ -20,6 +18,21 @@ const SERVER = new ApolloServer({
     settings: {
       'editor.theme': 'light'
     }
+  },
+  context: ({ res }) => ({
+    res
+  }),
+  formatError(err) {
+    console.error(err);
+    if (process.env.NODE_ENV === 'production') {
+      errors.report(err, req);   // <-- log the error
+    }
+    return {
+      message: err.message,
+      code: err.originalError && err.originalError.code,   // <--
+      locations: err.locations,
+      path: err.path
+    };
   }
 });
 // Exports
