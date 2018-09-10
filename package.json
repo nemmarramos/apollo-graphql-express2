@@ -1,0 +1,26 @@
+{
+  "name": "express-graphql-starter",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Nemmar Ramos <neu.nmr@gmail.com>",
+  "license": "MIT",
+  "babel": {
+    "presets": [
+      "latest"
+    ]
+  },
+  "scripts": {
+    "babel-node": "babel-node --presets=latest",
+    "start": "NODE_SRC=src/ NODE_ENV=development nodemon --exec ./node_modules/.bin/babel-node -- ./index.js"
+  },
+  "dependencies": {
+    "apollo-server-express": "^2.0.6",
+    "express": "^4.16.3",
+    "graphql": "^14.0.2",
+    "merge-graphql-schemas": "^1.5.3"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-latest": "^6.24.1"
+  }
+}
