@@ -1,9 +1,11 @@
 import argon2 from 'argon2';
 import Joi from 'joi';
+import jwt from 'jsonwebtoken';
 
 import Bookshelf from 'config/bookshelf';
 import User from 'models/User';
 import UserProfile from 'models/UserProfile';
+import env from 'config/env';
 
 const userSchema = Joi.object().keys({
   username: Joi.string().min(4).regex(/^[A-Za-z]\w*$/i).error(new Error('Username must be alphanumeric characters, starts with alphabet and at least 4 characters.')),
@@ -23,21 +25,20 @@ const userSchema = Joi.object().keys({
 });
 
 export const login = async ({ username, password }, { res }) => {
-  console.log('login');
   const user = await User.query({ where: { username }, orWhere: { email: username }}).fetch();
     
   if (!user) throw new Error('Invalid credentials');
   const verified = await argon2.verify(user.get('password'), password);
   
   if (!verified) throw new Error('Invalid credentials');
-  
-  res.cookie('jwt', 'token', {
+
+  const token = jwt.sign({ username: user.get('username') }, env.appSecret);
+
+  res.cookie('jwt', token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
   });
-  
-  console.log('context', res);
 
   return true;
 };
