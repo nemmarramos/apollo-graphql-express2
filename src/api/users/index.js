@@ -34,14 +34,20 @@ export const login = async ({ username, password }, { res }) => {
 
   const token = jwt.sign({ username: user.get('username') }, env.appSecret);
 
-  res.cookie('jwt', token, {
+  res.cookie('x-access-token', token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
   });
 
-  return true;
+  return {
+    token
+  };
 };
+
+export const logout = async ({ res }) => {
+  res.clearCookie("x-access-token");
+}
 
 export const register = async ({
   username, 

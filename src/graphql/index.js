@@ -22,24 +22,22 @@ const SERVER = new ApolloServer({
     }
   },
   context: ({ req, res }) => {
+    let user = null;
     try {
       const getCookie = (name) => {
         const match = req.headers.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
         if (match) return match[2];
       };
 
-      const jwtToken = getCookie('jwt');
-
-      console.log('jwtToken', jwtToken)
-      const decoded = jwt.verify(jwtToken, appSecret);
-      console.log('decoded', decoded);
+      user = jwt.verify(getCookie('x-access-token'), appSecret);
 
     } catch(err) {
-      console.error(err);
+      // console.error(err);
     }
 
     return {
       res,
+      user
     }
   },
   formatError(err) {

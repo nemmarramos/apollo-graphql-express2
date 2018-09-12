@@ -1,8 +1,9 @@
-import { login, register } from 'api/users';
+import { login, logout, register } from 'api/users';
 
 export default {
   Mutation: {
     login: (_, { username, password }, ctx ) => login({ username, password }, ctx),
+    logout: (_, args , ctx) => logout(ctx),
     register: (_, {
       username, 
       password,
