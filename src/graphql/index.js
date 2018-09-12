@@ -2,7 +2,9 @@
 
 import { ApolloServer } from 'apollo-server-express';
 import { mergeTypes, mergeResolvers } from 'merge-graphql-schemas';
+import jwt from 'jsonwebtoken';
 
+import { host, port } from 'config/env';
 import usersType from './users/types';
 import usersResolvers from './users/resolvers';
 
@@ -14,14 +16,25 @@ const SERVER = new ApolloServer({
   typeDefs: typeDefs,
   resolvers: resolvers,
   playground: {
-    endpoint: `http://localhost:4000/graphql`,
+    endpoint: `http://${host}:${port}/graphql`,
     settings: {
       'editor.theme': 'light'
     }
   },
-  context: ({ res }) => ({
-    res
-  }),
+  context: ({ req, res }) => {
+    try {
+      console.log('req.headers.cookie', req.headers.cookie)
+      const decoded = jwt.verify(req.headers.cookie, env.appSecret);
+      console.log('decoded', decoded);
+
+    } catch(err) {
+      // err
+    }
+
+    return {
+      res,
+    }
+  },
   formatError(err) {
     console.error(err);
     if (process.env.NODE_ENV === 'production') {

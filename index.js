@@ -1,11 +1,9 @@
 import _debug from 'debug'
 
 import app from './src/server'
+import { host, port } from 'config/env'
 
 const debug = _debug('api:server')
-
-const port = process.env.PORT || 4000;
-const host = process.env.PORT || '0.0.0.0';
 
 app.listen(port, host, () => {
   debug(`Starting server`)
