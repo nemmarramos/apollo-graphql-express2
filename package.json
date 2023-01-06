@@ -21,7 +21,7 @@
     "express": "^4.16.3",
     "graphql": "^14.0.2",
     "joi": "^13.6.0",
-    "jsonwebtoken": "^8.3.0",
+    "jsonwebtoken": "^9.0.0",
     "knex": "0.13",
     "merge-graphql-schemas": "^1.5.3",
     "mysql": "^2.16.0"
